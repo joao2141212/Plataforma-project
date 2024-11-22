@@ -1,0 +1,391 @@
+import React, { useState } from 'react';
+import { 
+  Home, 
+  BookOpen, 
+  Trophy, 
+  Users, 
+  Settings, 
+  LogOut, 
+  Star, 
+  Lock, 
+  Play, 
+  CheckCircle, 
+  Search, 
+  Bell, 
+  MessageCircle, 
+  PlusCircle
+} from 'lucide-react';
+
+// Layout Principal com Navegação Lateral
+const ServicePlatform = () => {
+  const [activeSection, setActiveSection] = useState('home');
+  const [activeMenu, setActiveMenu] = useState('home');
+
+  // Dados Compartilhados
+  const [userStats, setUserStats] = useState({
+    studyDays: 45,
+    points: 3450,
+    level: 12
+  });
+
+  const [courses, setCourses] = useState([
+    { 
+      id: 1, 
+      title: 'Desenvolvimento Web', 
+      progress: 65, 
+      color: 'bg-green-500',
+      points: 1200,
+      lessons: [
+        { title: 'HTML', locked: false, completed: true },
+        { title: 'CSS', locked: false, completed: true },
+        { title: 'JavaScript', locked: false, completed: false },
+        { title: 'React', locked: false, completed: false },
+        { title: 'NodeJS', locked: true, completed: false }
+      ]
+    },
+    { 
+      id: 2, 
+      title: 'Gestão de Projetos', 
+      progress: 40, 
+      color: 'bg-blue-500',
+      points: 800,
+      lessons: [
+        { title: 'Fundamentos', locked: false, completed: true },
+        { title: 'Metodologias', locked: false, completed: false },
+        { title: 'Ferramentas', locked: false, completed: false },
+        { title: 'Liderança', locked: true, completed: false },
+        { title: 'Estratégia', locked: true, completed: false }
+      ]
+    },
+    { 
+      id: 3, 
+      title: 'Marketing Digital', 
+      progress: 85, 
+      color: 'bg-purple-500',
+      points: 600,
+      lessons: [
+        { title: 'Fundamentos', locked: false, completed: true },
+        { title: 'Estratégias', locked: false, completed: true },
+        { title: 'Mídias Sociais', locked: false, completed: false },
+        { title: 'SEO', locked: true, completed: false },
+        { title: 'Analytics', locked: true, completed: false }
+      ]
+    }
+  ]);
+
+  // Componente de Ícone de Menu
+  const MenuIcon = ({ icon, active, onClick }) => (
+    <button 
+      onClick={onClick}
+      className={`p-2 rounded-lg ${
+        active 
+          ? 'bg-blue-700 text-white' 
+          : 'text-blue-300 hover:bg-blue-800'
+      }`}
+    >
+      {icon}
+    </button>
+  );
+
+  // Barra Lateral de Navegação
+  const MenuSidebar = () => (
+    <div className="w-20 bg-blue-900 text-white flex flex-col items-center py-4 h-screen">
+      <div className="mb-8">
+        <img 
+          src="/api/placeholder/80/80" 
+          alt="Logo ServicePlataform" 
+          className="rounded-full mb-4"
+        />
+      </div>
+      
+      <nav className="space-y-4">
+        <MenuIcon 
+          icon={<Home />} 
+          active={activeMenu === 'home'}
+          onClick={() => {
+            setActiveMenu('home');
+            setActiveSection('home');
+          }}
+        />
+        <MenuIcon 
+          icon={<BookOpen />} 
+          active={activeMenu === 'courses'}
+          onClick={() => {
+            setActiveMenu('courses');
+            setActiveSection('courses');
+          }}
+        />
+        <MenuIcon 
+          icon={<Trophy />} 
+          active={activeMenu === 'achievements'}
+          onClick={() => {
+            setActiveMenu('achievements');
+            setActiveSection('achievements');
+          }}
+        />
+        <MenuIcon 
+          icon={<Users />} 
+          active={activeMenu === 'community'}
+          onClick={() => {
+            setActiveMenu('community');
+            setActiveSection('profile');
+          }}
+        />
+      </nav>
+
+      <div className="mt-auto mb-4 space-y-4">
+        <MenuIcon 
+          icon={<Settings />} 
+          active={activeMenu === 'settings'}
+          onClick={() => {
+            setActiveMenu('settings');
+            setActiveSection('settings');
+          }}
+        />
+        <MenuIcon 
+          icon={<LogOut />} 
+          active={false}
+          onClick={() => {/* Lógica de logout */}}
+        />
+      </div>
+    </div>
+  );
+
+  // Componente de Curso Detalhado
+  const CourseCard = ({ course, onStartLesson }) => {
+    const [expanded, setExpanded] = useState(false);
+
+    return (
+      <div 
+        className={`bg-white p-4 rounded-lg shadow-md transition-all duration-300 ${
+          expanded ? 'scale-105' : ''
+        }`}
+        onClick={() => setExpanded(!expanded)}
+      >
+        <div className="flex justify-between items-center mb-2">
+          <h3 className="font-bold">{course.title}</h3>
+          <div className="flex items-center">
+            <Star className="text-yellow-500 mr-1" size={20} />
+            <span>{course.points} XP</span>
+          </div>
+        </div>
+        <div className="w-full bg-gray-200 rounded-full h-2.5 mb-3">
+          <div 
+            className={`${course.color} h-2.5 rounded-full`} 
+            style={{width: `${course.progress}%`}}
+          ></div>
+        </div>
+
+        {expanded && (
+          <div className="mt-4 grid grid-cols-5 gap-2">
+            {course.lessons.map((lesson, index) => (
+              <button 
+                key={index}
+                disabled={lesson.locked}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (!lesson.locked) onStartLesson(lesson);
+                }}
+                className={`flex flex-col items-center p-2 rounded-md ${
+                  lesson.locked 
+                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
+                    : lesson.completed 
+                    ? 'bg-green-500 text-white' 
+                    : 'bg-blue-500 text-white'
+                }`}
+              >
+                {lesson.locked ? (
+                  <Lock className="mb-2" />
+                ) : lesson.completed ? (
+                  <CheckCircle className="mb-2" />
+                ) : (
+                  <Play className="mb-2" />
+                )}
+                <span className="text-xs">{lesson.title}</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  // Renderização Condicional de Seções
+  const renderSection = () => {
+    const startLesson = (lesson) => {
+      console.log('Iniciando lição:', lesson.title);
+    };
+
+    switch(activeSection) {
+      case 'home':
+        return (
+          <div>
+            <h1 className="text-3xl font-bold mb-6">Bem-vindo, Usuário</h1>
+            
+            <section className="grid grid-cols-3 gap-4 mb-6">
+              <div className="bg-white p-4 rounded-lg shadow-md">
+                <h2 className="text-xl font-semibold">Dias de Estudo</h2>
+                <p className="text-4xl font-bold text-blue-600">{userStats.studyDays}</p>
+              </div>
+              
+              <div className="bg-white p-4 rounded-lg shadow-md">
+                <h2 className="text-xl font-semibold">Pontos</h2>
+                <p className="text-4xl font-bold text-green-600">{userStats.points}</p>
+              </div>
+              
+              <div className="bg-white p-4 rounded-lg shadow-md">
+                <h2 className="text-xl font-semibold">Nível</h2>
+                <p className="text-4xl font-bold text-purple-600">{userStats.level}</p>
+              </div>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-bold mb-4">Seus Cursos</h2>
+              <div className="grid grid-cols-3 gap-4">
+                {courses.map(course => (
+                  <CourseCard key={course.id} course={course} onStartLesson={startLesson} />
+                ))}
+              </div>
+            </section>
+          </div>
+        );
+      case 'courses':
+        return (
+          <div>
+            <h1 className="text-3xl font-bold mb-6">Todos os Cursos</h1>
+            <div className="grid grid-cols-3 gap-4">
+              {courses.map(course => (
+                <CourseCard key={course.id} course={course} onStartLesson={startLesson} />
+              ))}
+            </div>
+          </div>
+        );
+      case 'profile':
+        return (
+          <div>
+            <h1 className="text-3xl font-bold mb-6">Perfil do Usuário</h1>
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <div className="flex items-center mb-6">
+                <img 
+                  src="/api/placeholder/120/120" 
+                  alt="Foto de Perfil" 
+                  className="rounded-full w-24 h-24 mr-6"
+                />
+                <div>
+                  <h2 className="text-2xl font-bold">João da Silva</h2>
+                  <p className="text-gray-600">joao@example.com</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <h3 className="font-semibold mb-2">Conquistas</h3>
+                  <div className="flex items-center">
+                    <Trophy className="mr-2 text-yellow-500" />
+                    <span className="text-xl">12</span>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-2">Amigos</h3>
+                  <div className="flex items-center">
+                    <Users className="mr-2 text-blue-500" />
+                    <span className="text-xl">23</span>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-2">Mensagens</h3>
+                  <div className="flex items-center">
+                    <MessageCircle className="mr-2 text-green-500" />
+                    <span className="text-xl">7</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      case 'achievements':
+        return (
+          <div>
+            <h1 className="text-3xl font-bold mb-6">Conquistas</h1>
+            <div className="grid grid-cols-4 gap-4">
+              {[1,2,3,4,5,6,7,8].map((item) => (
+                <div key={item} className="bg-white p-4 rounded-lg shadow-md text-center">
+                  <Trophy className="mx-auto mb-2 text-yellow-500" size={48} />
+                  <h3 className="font-semibold">Conquista {item}</h3>
+                  <p className="text-gray-600">Descrição da conquista</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      case 'settings':
+        return (
+          <div>
+            <h1 className="text-3xl font-bold mb-6">Configurações</h1>
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h2 className="text-xl font-semibold mb-4">Configurações de Conta</h2>
+              <div className="space-y-4">
+                <div>
+                  <label className="block mb-2">Email</label>
+                  <input 
+                    type="email" 
+                    className="w-full p-2 border rounded-md" 
+                    value="joao@example.com" 
+                    readOnly 
+                  />
+                </div>
+                <div>
+                  <label className="block mb-2">Alterar Senha</label>
+                  <input 
+                    type="password" 
+                    className="w-full p-2 border rounded-md" 
+                    placeholder="Nova senha" 
+                  />
+                </div>
+                <div>
+                  <label className="block mb-2">Notificações</label>
+                  <div className="flex items-center">
+                    <input 
+                      type="checkbox" 
+                      className="mr-2" 
+                      defaultChecked 
+                    />
+                    <span>Receber atualizações por email</span>
+                  </div>
+                </div>
+                <button className="bg-blue-600 text-white px-4 py-2 rounded-md">
+                  Salvar Alterações
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="flex">
+      <MenuSidebar />
+      <main className="flex-grow bg-gray-100 p-6">
+        <div className="flex justify-end mb-4">
+          <div className="flex items-center">
+            <button className="mr-4 text-gray-600 hover:text-gray-800">
+              <Search />
+            </button>
+            <button className="mr-4 text-gray-600 hover:text-gray-800">
+              <Bell />
+            </button>
+            <button className="bg-blue-600 text-white px-4 py-2 rounded-md flex items-center">
+              <PlusCircle className="mr-2" />
+              Novo Curso
+            </button>
+          </div>
+        </div>
+        {renderSection()}
+      </main>
+    </div>
+  );
+};
+
+export default ServicePlatform;
