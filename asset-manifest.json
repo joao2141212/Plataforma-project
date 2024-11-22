@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/Plataforma-project/static/css/main.ef794269.css",
-    "main.js": "/Plataforma-project/static/js/main.f1b4dca6.js",
+    "main.css": "/Plataforma-project/static/css/main.bfa70cb2.css",
+    "main.js": "/Plataforma-project/static/js/main.79c45932.js",
     "index.html": "/Plataforma-project/index.html",
-    "main.ef794269.css.map": "/Plataforma-project/static/css/main.ef794269.css.map",
-    "main.f1b4dca6.js.map": "/Plataforma-project/static/js/main.f1b4dca6.js.map"
+    "main.bfa70cb2.css.map": "/Plataforma-project/static/css/main.bfa70cb2.css.map",
+    "main.79c45932.js.map": "/Plataforma-project/static/js/main.79c45932.js.map"
   },
   "entrypoints": [
-    "static/css/main.ef794269.css",
-    "static/js/main.f1b4dca6.js"
+    "static/css/main.bfa70cb2.css",
+    "static/js/main.79c45932.js"
   ]
 }
