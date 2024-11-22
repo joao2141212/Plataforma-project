@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/Plataforma-project/static/css/main.ef794269.css",
+    "main.js": "/Plataforma-project/static/js/main.f1b4dca6.js",
+    "index.html": "/Plataforma-project/index.html",
+    "main.ef794269.css.map": "/Plataforma-project/static/css/main.ef794269.css.map",
+    "main.f1b4dca6.js.map": "/Plataforma-project/static/js/main.f1b4dca6.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ef794269.css",
+    "static/js/main.f1b4dca6.js"
+  ]
+}
